@@ -70,6 +70,7 @@ class UploadController {
                 const ok = yield unaSolaImgDB_1.unaSolaImgDB.saveImage(tipo, id, nombreArchivo);
                 return res.json({
                     ok,
+                    nombreArchivo,
                     mgs: 'File Uploaded Successfully',
                 });
             }
