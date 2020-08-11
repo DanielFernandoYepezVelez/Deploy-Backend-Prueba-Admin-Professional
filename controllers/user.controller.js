@@ -56,7 +56,9 @@ class UserController {
         return __awaiter(this, void 0, void 0, function* () {
             const newUser = req.body;
             try {
-                const query = yield mysql2_1.pool.query('SELECT email FROM users WHERE email = ?', [newUser.email]);
+                const query = yield mysql2_1.pool.query('SELECT email FROM users WHERE email = ?', [
+                    newUser.email,
+                ]);
                 /* Validate Email Unique */
                 emailFind_1.emailFind.userEmailFind(query[0]);
                 /* Hash Password */
@@ -82,6 +84,16 @@ class UserController {
             const { user_id } = req.params;
             const _a = req.body, { password, google } = _a, updateUser = __rest(_a, ["password", "google"]);
             try {
+                const googleQ = yield mysql2_1.pool.query('SELECT google FROM users WHERE id = ?', [
+                    user_id,
+                ]);
+                const googleDB = getDataDB_1.getDataDB.init(googleQ[0], 2, 11);
+                if (googleDB !== '0') {
+                    return res.status(400).json({
+                        ok: false,
+                        msg: 'User Is Google, No Update Successfully',
+                    });
+                }
                 let query = yield mysql2_1.pool.query('SELECT email FROM users WHERE id = ?', [
                     user_id,
                 ]);
@@ -118,12 +130,12 @@ class UserController {
         return __awaiter(this, void 0, void 0, function* () {
             const { user_id } = req.params;
             try {
-                let query = yield mysql2_1.pool.query('SELECT id FROM users WHERE id = ?', [
-                    user_id,
-                ]);
+                let query = yield mysql2_1.pool.query('SELECT id FROM users WHERE id = ?', [user_id]);
                 /* Validar Existencia User */
                 userFind_1.userFind.findUser(query[0]);
-                query = yield mysql2_1.pool.query('UPDATE users SET activate = FALSE WHERE id = ?', [user_id]);
+                query = yield mysql2_1.pool.query('UPDATE users SET activate = FALSE WHERE id = ?', [
+                    user_id,
+                ]);
                 return res.status(400).json({
                     ok: true,
                     msg: 'User Deleted Successfully',
