@@ -108,10 +108,10 @@ class UserController {
                     /* Validar Email Entrante Unico */
                     emailFind_1.emailFind.userEmailFind(query[0]);
                 }
-                query = yield mysql2_1.pool.query('UPDATE users SET ? WHERE id = ?', [
-                    updateUser,
-                    user_id,
-                ]);
+                /* query = await pool.query('UPDATE users SET ? WHERE id = ?', [
+                     updateUser,
+                     user_id,
+                   ]); */
                 return res.json({
                     ok: true,
                     message: 'User Updated Successfully',
