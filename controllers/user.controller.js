@@ -35,7 +35,7 @@ class UserController {
             let desde = Number(req.query.desde || 0);
             try {
                 /* Consultas Lanzadas Al Mismo Tiempo(NodeJS Es Non-Blocking) */
-                const queryPag = mysql2_1.pool.query('SELECT id, name, img, email, google, role, activate FROM users LIMIT 5 OFFSET ?', [desde]);
+                const queryPag = mysql2_1.pool.query('SELECT id, name, img, email, google, role, activate FROM users WHERE activate != ? LIMIT 5 OFFSET ?', [0, desde]);
                 const queryTotal = mysql2_1.pool.query('SELECT COUNT(DISTINCT id) AS Total FROM users');
                 const [users, totalUsers] = yield Promise.all([queryPag, queryTotal]);
                 return res.json({
@@ -108,10 +108,10 @@ class UserController {
                     /* Validar Email Entrante Unico */
                     emailFind_1.emailFind.userEmailFind(query[0]);
                 }
-                /* query = await pool.query('UPDATE users SET ? WHERE id = ?', [
-                     updateUser,
-                     user_id,
-                   ]); */
+                query = yield mysql2_1.pool.query('UPDATE users SET ? WHERE id = ?', [
+                    updateUser,
+                    user_id,
+                ]);
                 return res.json({
                     ok: true,
                     message: 'User Updated Successfully',
