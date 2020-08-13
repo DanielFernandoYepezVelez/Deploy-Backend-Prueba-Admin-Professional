@@ -51,7 +51,7 @@ class SearchController {
             try {
                 switch (table) {
                     case 'users':
-                        query = yield mysql2_1.pool.query('SELECT name FROM users WHERE name LIKE ?', [
+                        query = yield mysql2_1.pool.query('SELECT id, name, img, email, google, role, activate FROM users WHERE name LIKE ?', [
                             busqueda,
                         ]);
                         break;
