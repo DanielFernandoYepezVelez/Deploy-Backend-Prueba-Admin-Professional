@@ -1,17 +1,20 @@
 "use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
+var __awaiter = (this && this.__awaiter) || function(thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function(resolve) { resolve(value); }); }
+    return new(P || (P = Promise))(function(resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+
         function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+
         function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __rest = (this && this.__rest) || function (s, e) {
+var __rest = (this && this.__rest) || function(s, e) {
     var t = {};
-    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
-        t[p] = s[p];
+    for (var p in s)
+        if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
+            t[p] = s[p];
     if (s != null && typeof Object.getOwnPropertySymbols === "function")
         for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
             if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i]))
@@ -31,7 +34,7 @@ const getDataDB_1 = require("../utils/helpers/getDataDB");
 class UserController {
     /* PAGINACIÓN SQL(IMPORTANTE) */
     getUsers(req, res) {
-        return __awaiter(this, void 0, void 0, function* () {
+        return __awaiter(this, void 0, void 0, function*() {
             let desde = Number(req.query.desde || 0);
             try {
                 /* Consultas Lanzadas Al Mismo Tiempo(NodeJS Es Non-Blocking) */
@@ -43,8 +46,7 @@ class UserController {
                     users: users[0],
                     totalUsers: totalUsers[0],
                 });
-            }
-            catch (e) {
+            } catch (e) {
                 return res.status(400).json({
                     ok: false,
                     error: e,
@@ -53,7 +55,7 @@ class UserController {
         });
     }
     createUser(req, res) {
-        return __awaiter(this, void 0, void 0, function* () {
+        return __awaiter(this, void 0, void 0, function*() {
             const newUser = req.body;
             try {
                 const query = yield mysql2_1.pool.query('SELECT email FROM users WHERE email = ?', [
@@ -69,8 +71,7 @@ class UserController {
                     ok: true,
                     message: 'User Created Successfully',
                 });
-            }
-            catch (e) {
+            } catch (e) {
                 return res.status(400).json({
                     ok: false,
                     msg: 'User Not Created Successfully',
@@ -80,9 +81,11 @@ class UserController {
         });
     }
     updateUser(req, res) {
-        return __awaiter(this, void 0, void 0, function* () {
+        return __awaiter(this, void 0, void 0, function*() {
             const { user_id } = req.params;
-            const _a = req.body, { password, google } = _a, updateUser = __rest(_a, ["password", "google"]);
+            const _a = req.body,
+                { password, google } = _a,
+                updateUser = __rest(_a, ["password", "google"]);
             try {
                 const googleQ = yield mysql2_1.pool.query('SELECT google FROM users WHERE id = ?', [
                     user_id,
@@ -116,8 +119,7 @@ class UserController {
                     ok: true,
                     message: 'User Updated Successfully',
                 });
-            }
-            catch (e) {
+            } catch (e) {
                 return res.status(400).json({
                     ok: false,
                     msg: 'User Not Updated Successfully',
@@ -127,7 +129,7 @@ class UserController {
         });
     }
     deleteUser(req, res) {
-        return __awaiter(this, void 0, void 0, function* () {
+        return __awaiter(this, void 0, void 0, function*() {
             const { user_id } = req.params;
             try {
                 let query = yield mysql2_1.pool.query('SELECT id FROM users WHERE id = ?', [user_id]);
@@ -136,12 +138,11 @@ class UserController {
                 query = yield mysql2_1.pool.query('UPDATE users SET activate = FALSE WHERE id = ?', [
                     user_id,
                 ]);
-                return res.status(400).json({
+                return res.json({
                     ok: true,
                     msg: 'User Deleted Successfully',
                 });
-            }
-            catch (e) {
+            } catch (e) {
                 return res.status(400).json({
                     ok: false,
                     msg: 'User Not Deleted Successfully',
